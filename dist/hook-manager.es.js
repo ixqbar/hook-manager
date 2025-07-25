@@ -1,0 +1,95 @@
+class i {
+  constructor(t, r) {
+    this.obj = t, this.key = r, this._callHandlers = [], this._returnHandlers = [], this._errorHandlers = [], this._origFn = t[r], this._hook();
+  }
+  _hook() {
+    const t = this;
+    this.obj[this.key] = function(...r) {
+      t._callHandlers.forEach((s) => s.call(this, r));
+      let o;
+      try {
+        o = t._origFn.apply(this, r);
+      } catch (s) {
+        throw t._errorHandlers.forEach((e) => e.call(this, s)), s;
+      }
+      return o && typeof o.then == "function" ? o.then(
+        (s) => (t._returnHandlers.forEach((e) => e.call(this, s)), s),
+        (s) => (t._errorHandlers.forEach((e) => e.call(this, s)), Promise.reject(s))
+      ) : (t._returnHandlers.forEach((s) => s.call(this, o)), o);
+    };
+  }
+  onCall(t) {
+    return this._callHandlers.push(t), this;
+  }
+  onReturn(t) {
+    return this._returnHandlers.push(t), this;
+  }
+  onError(t) {
+    return this._errorHandlers.push(t), this;
+  }
+  unhook() {
+    this.obj[this.key] = this._origFn;
+  }
+}
+class l {
+  constructor(t, r) {
+    this.obj = t, this.key = r, this._getHandlers = [], this._setHandlers = [], this._origDescriptor = Object.getOwnPropertyDescriptor(t, r), this._value = t[r], this._hook();
+  }
+  _hook() {
+    const t = this;
+    Object.defineProperty(this.obj, this.key, {
+      configurable: !0,
+      enumerable: !0,
+      get() {
+        return t._getHandlers.forEach((r) => r.call(this, t._value)), t._value;
+      },
+      set(r) {
+        t._setHandlers.forEach((o) => o.call(this, r)), t._value = r;
+      }
+    });
+  }
+  onGet(t) {
+    return this._getHandlers.push(t), this;
+  }
+  onSet(t) {
+    return this._setHandlers.push(t), this;
+  }
+  unhook() {
+    this._origDescriptor && Object.defineProperty(this.obj, this.key, this._origDescriptor);
+  }
+}
+function c(n, t) {
+  const r = t.split(".");
+  let o = n;
+  for (let e = 0; e < r.length - 1; e++) {
+    if (!o) return null;
+    o = o[r[e]];
+  }
+  const s = r[r.length - 1];
+  return o ? { obj: o, key: s } : null;
+}
+class a {
+  constructor(t = typeof window < "u" ? window : globalThis) {
+    this.root = t, this.hooks = /* @__PURE__ */ new Map();
+  }
+  hook(t) {
+    const r = c(this.root, t);
+    if (!r) throw new Error(`Invalid path: ${t}`);
+    const { obj: o, key: s } = r, e = Object.getOwnPropertyDescriptor(o, s), h = typeof o[s] == "function" && !(e && (e.get || e.set)) ? new i(o, s) : new l(o, s);
+    return this.hooks.set(t, h), h;
+  }
+  unhook(t) {
+    const r = this.hooks.get(t);
+    r && (r.unhook(), this.hooks.delete(t));
+  }
+  unhookAll() {
+    for (const t of this.hooks.values())
+      t.unhook();
+    this.hooks.clear();
+  }
+}
+export {
+  i as FunctionHook,
+  a as HookManager,
+  l as PropertyHook
+};

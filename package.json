@@ -1,0 +1,26 @@
+{
+  "name": "hook-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/hook-manager.cjs.js",
+  "module": "./dist/hook-manager.es.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/hook-manager.es.js",
+      "require": "./dist/hook-manager.cjs.js",
+      "default": "./dist/hook-manager.es.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.5.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.5.0"
+  }
+}
