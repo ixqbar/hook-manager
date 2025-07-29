@@ -68,7 +68,7 @@ function c(n, t) {
   const s = r[r.length - 1];
   return o ? { obj: o, key: s } : null;
 }
-class a {
+class u {
   constructor(t = typeof window < "u" ? window : globalThis) {
     this.root = t, this.hooks = /* @__PURE__ */ new Map();
   }
@@ -89,7 +89,5 @@ class a {
   }
 }
 export {
-  i as FunctionHook,
-  a as HookManager,
-  l as PropertyHook
+  u as default
 };

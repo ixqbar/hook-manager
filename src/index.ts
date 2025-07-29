@@ -1,6 +1,6 @@
 type Callback<T = any> = (arg: T) => void;
 
-export class FunctionHook {
+class FunctionHook {
     private _callHandlers: Callback<any[]>[] = [];
     private _returnHandlers: Callback<any>[] = [];
     private _errorHandlers: Callback<Error>[] = [];
@@ -20,7 +20,7 @@ export class FunctionHook {
             try {
                 result = self._origFn.apply(this, args);
             } catch (err) {
-                self._errorHandlers.forEach(fn => fn.call(this, err));
+                self._errorHandlers.forEach(fn => fn.call(this, err as Error));
                 throw err;
             }
 
@@ -62,7 +62,7 @@ export class FunctionHook {
     }
 }
 
-export class PropertyHook {
+class PropertyHook {
     private _getHandlers: Callback<any>[] = [];
     private _setHandlers: Callback<any>[] = [];
     private _origDescriptor: PropertyDescriptor | undefined;
@@ -118,7 +118,7 @@ function resolvePath(root: any, path: string): { obj: any; key: string } | null 
     return target ? { obj: target, key } : null;
 }
 
-export class HookManager {
+export default class HookManager {
     private hooks = new Map<string, FunctionHook | PropertyHook>();
 
     constructor(public root: any = typeof window !== 'undefined' ? window : globalThis) {}

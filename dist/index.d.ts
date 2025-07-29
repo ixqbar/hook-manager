@@ -1,5 +1,5 @@
 type Callback<T = any> = (arg: T) => void;
-export declare class FunctionHook {
+declare class FunctionHook {
     obj: any;
     key: string;
     private _callHandlers;
@@ -13,7 +13,7 @@ export declare class FunctionHook {
     onError(fn: Callback<Error>): this;
     unhook(): void;
 }
-export declare class PropertyHook {
+declare class PropertyHook {
     obj: any;
     key: string;
     private _getHandlers;
@@ -26,7 +26,7 @@ export declare class PropertyHook {
     onSet(fn: Callback<any>): this;
     unhook(): void;
 }
-export declare class HookManager {
+export default class HookManager {
     root: any;
     private hooks;
     constructor(root?: any);
