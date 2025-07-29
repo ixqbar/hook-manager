@@ -1,6 +1,6 @@
 {
 	"name": "hook-manager",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"type": "module",
 	"main": "./dist/hook-manager.cjs.js",
 	"module": "./dist/hook-manager.es.js",
